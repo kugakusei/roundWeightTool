@@ -1,0 +1,80 @@
+/*round_skinweight
+*スキンウェイトの値を少数第4位で四捨五入するスクリプト
+*
+*1.オブジェクトを選択
+*2.このスクリプトを実行
+*
+*Written by shinjiro nagao
+*/
+global proc round_skinweight()
+{
+    float $precision = 1000;
+
+	int    $PolyCounts[];
+	float  $WgtList[];
+	string $cmd="";
+	string $SkinClusterName;
+	string $SelectList[];
+	string $SelectItem;
+	string $TransList[];
+	string $Component;
+	clear $SelectList;
+	$SelectList = `ls -sl -et "transform"`;
+
+	if (size($SelectList) <= 0)
+	{
+		print ("\nNagao Round SkinWeight: You must select one or more object.\n");
+	}
+
+	for ($object in $SelectList)
+	{
+		if (size(`listRelatives -s -typ "mesh" $object`) != 0)
+		{
+			clear $PolyCounts;
+			$PolyCounts = `polyEvaluate -v $object`;
+
+			$SkinClusterName = "";
+			$SkinClusterName = `findRelatedSkinCluster($object)`;
+			
+			if ($SkinClusterName != "")
+			{
+				skinPercent -prw 0.000001 $SkinClusterName;
+
+				for ($i = 0; $i < $PolyCounts[0]; $i++)
+				{
+					clear $TransList;
+					clear $WgtList;
+					$Component = $object + ".vtx[" + $i + "]";
+
+					$TransList = `skinPercent -ib 0.000001 -q -t $SkinClusterName $Component`;
+
+					$WgtList = `skinPercent -ib 0.000001 -q -v $SkinClusterName $Component`;
+
+					float $round_weight=0.0;
+					
+					
+					for($j=0; $j<size($WgtList); $j++)
+					{
+						$round_weight = $WgtList[$j];
+						$round_weight = floor($round_weight*$precision + 0.5) / $precision;
+						
+						skinPercent -tv $TransList[$j] $round_weight $SkinClusterName $Component;
+
+						$cmd = "setAttr " + $TransList[$j] + ".liw 1";
+						eval $cmd;
+					}
+					
+					for($j=0; $j<size($TransList); $j++)
+					{
+						$cmd = "setAttr " + $TransList[$j] + ".liw 0";
+						eval $cmd;
+					}
+				}
+			}
+
+		}
+
+	}
+
+
+}
