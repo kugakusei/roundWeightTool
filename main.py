@@ -1,32 +1,32 @@
 #!/usr/bin/env python
-# -*- coding: shift_jis -*-
+# -*- coding: UTF-8 -*-
 import maya.cmds as mc
 import maya.mel as mm
 
 class weightRebalance():
 	def __init__(self):
-		#ƒ}ƒbƒNƒXƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ðŽw’è‚µ‚Ü‚·
-		global MaxInfl	
-		#ŽlŽÌŒÜ“ü‚·‚éŒ…‚ðÝ’è‚µ‚Ü‚·
-		global roundPoint	
-		##Œã‚Å‚Ü‚Æ‚ß‚Ä³‹K‰»‚·‚é‚Ì‚ÅAƒŠƒXƒg‚É“ü‚ê‚Æ‚«‚Ü‚·
-		global skinClusterList	
-		#ƒGƒ‰[‚ð‹N‚±‚µ‚Ä‚¢‚é’¸“_‚ðƒŠƒXƒg‚µ‚Ü‚·
-		global errorVertex		
-				
-		#ƒ}ƒbƒNƒXƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ðŽw’è‚µ‚Ü‚·
+		#ãƒžãƒƒã‚¯ã‚¹ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ã‚’æŒ‡å®šã—ã¾ã™
+		global MaxInfl
+		#å››æ¨äº”å…¥ã™ã‚‹æ¡ã‚’è¨­å®šã—ã¾ã™
+		global roundPoint
+		##å¾Œã§ã¾ã¨ã‚ã¦æ­£è¦åŒ–ã™ã‚‹ã®ã§ã€ãƒªã‚¹ãƒˆã«å…¥ã‚Œã¨ãã¾ã™
+		global skinClusterList
+		#ã‚¨ãƒ©ãƒ¼ã‚’èµ·ã“ã—ã¦ã„ã‚‹é ‚ç‚¹ã‚’ãƒªã‚¹ãƒˆã—ã¾ã™
+		global errorVertex
+
+		#ãƒžãƒƒã‚¯ã‚¹ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ã‚’æŒ‡å®šã—ã¾ã™
 		MaxInfl = 3
-		
-		#ŽlŽÌŒÜ“ü‚·‚éŒ…‚ðÝ’è‚µ‚Ü‚·
+
+		#å››æ¨äº”å…¥ã™ã‚‹æ¡ã‚’è¨­å®šã—ã¾ã™
 		roundPoint = 2
-		
-		##Œã‚Å‚Ü‚Æ‚ß‚Ä³‹K‰»‚·‚é‚Ì‚ÅAƒŠƒXƒg‚É“ü‚ê‚Æ‚«‚Ü‚·
+
+		##å¾Œã§ã¾ã¨ã‚ã¦æ­£è¦åŒ–ã™ã‚‹ã®ã§ã€ãƒªã‚¹ãƒˆã«å…¥ã‚Œã¨ãã¾ã™
 		skinClusterList = []
-		
-		#ƒGƒ‰[‚ð‹N‚±‚µ‚Ä‚¢‚é’¸“_‚ðƒŠƒXƒg‚µ‚Ü‚·
+
+		#ã‚¨ãƒ©ãƒ¼ã‚’èµ·ã“ã—ã¦ã„ã‚‹é ‚ç‚¹ã‚’ãƒªã‚¹ãƒˆã—ã¾ã™
 		errorVertex = []
-	
-	#---------------------------------------------------------------------------------------------------------------------	
+
+	#---------------------------------------------------------------------------------------------------------------------
 	def createUI(self, *args):
 		if mc.window( 'weightRoundWindow', q=True, ex=True):
 			mc.deleteUI( 'weightRoundWindow' )
@@ -35,271 +35,271 @@ class weightRebalance():
 		mc.rowColumnLayout( 'mainLay', p='mainFrame', nc=2 )
 		mc.intField( 'roundWeightFields',p='mainLay', value=3, ann='ex)3-->0.001, 2-->0.01, 1-->0.1' )
 		mc.button( 'roundButton', p='mainLay', l='round vtx weight', c= self.roundSkinWeights  )
-		mc.intField( 'maxInflFields',p='mainLay', value=3, ann='Å‘åƒCƒ“ƒtƒ‹ƒGƒ“ƒX”‚Å‚·BŽw’è‚·‚é‚±‚Æ‚ÅA’¸“_ƒEƒFƒCƒg‚É‘Î‚·‚éƒWƒ‡ƒCƒ“ƒg‚Ì”‚ðŒ¸­‚³‚¹‚Ü‚·')
+		mc.intField( 'maxInflFields',p='mainLay', value=3, ann='æœ€å¤§ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹æ•°ã§ã™ã€‚æŒ‡å®šã™ã‚‹ã“ã¨ã§ã€é ‚ç‚¹ã‚¦ã‚§ã‚¤ãƒˆã«å¯¾ã™ã‚‹ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®æ•°ã‚’æ¸›å°‘ã•ã›ã¾ã™')
 		mc.button( 'maxButton', p='mainLay', l='force max influence', c=self.maxInfllenceAdjustment )
 		mc.button( 'selectErrorVtxButton', p='mainLay', l='error weight vtx', c= self.thresholdDetermination )
 		mc.showWindow( 'weightRoundWindow' )
 	#---------------------------------------------------------------------------------------------------------------------
 	def weightBalanceList(self, vtx, connectSkinsName, *args):
 
-		#‘I‘ð‚µ‚½’¸“_‚ÌƒCƒ“ƒtƒ‹ƒGƒ“ƒVƒƒƒ‹‚ÈŠeƒWƒ‡ƒCƒ“ƒg‚ðƒŠƒXƒg‚µ‚Ü‚·
+		#é¸æŠžã—ãŸé ‚ç‚¹ã®ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚·ãƒ£ãƒ«ãªå„ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ãƒªã‚¹ãƒˆã—ã¾ã™
 		listWeightJoint = mc.skinPercent( connectSkinsName, vtx, q=True , t=None )
-		#ƒŠƒXƒg‚µ‚½ƒWƒ‡ƒCƒ“ƒg‚ªŽx”z‚µ‚Ä‚¢‚éƒp[ƒZƒ“ƒe[ƒW‚ðŽæ“¾‚µ‚Ü‚·
+		#ãƒªã‚¹ãƒˆã—ãŸã‚¸ãƒ§ã‚¤ãƒ³ãƒˆãŒæ”¯é…ã—ã¦ã„ã‚‹ãƒ‘ãƒ¼ã‚»ãƒ³ãƒ†ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¾ã™
 		listWeightValue = mc.skinPercent( connectSkinsName, vtx, q=True , v=True )
-		
-		
-		#ƒEƒFƒCƒg‚ð‚à‚Á‚Ä‚¢‚éƒWƒ‡ƒCƒ“ƒg‚ðƒsƒbƒNƒAƒbƒv‚µAƒ‰ƒEƒ“ƒh‚µ‚ÄŠi”[‚µ‚Ü‚·
+
+
+		#ã‚¦ã‚§ã‚¤ãƒˆã‚’ã‚‚ã£ã¦ã„ã‚‹ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã€ãƒ©ã‚¦ãƒ³ãƒ‰ã—ã¦æ ¼ç´ã—ã¾ã™
 		haveWeightDicBuf = {}
 		for i,v in enumerate(listWeightJoint):
-			if listWeightValue[i] > 0:		
+			if listWeightValue[i] > 0:
 				roundNum = 	round(listWeightValue[i], roundPoint)
 				haveWeightDicBuf[v] = roundNum
-		
+
 		return haveWeightDicBuf
-	
-	#---------------------------------------------------------------------------------------------------------------------	
+
+	#---------------------------------------------------------------------------------------------------------------------
 	def roundSkinWeights(self, *args):
-		#ƒ}ƒbƒNƒXƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ðŽw’è‚µ‚Ü‚·
+		#ãƒžãƒƒã‚¯ã‚¹ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ã‚’æŒ‡å®šã—ã¾ã™
 		global MaxInfl
-		MaxInfl = mc.intField( 'roundWeightFields', q=True, value=True )		
-		#ŽlŽÌŒÜ“ü‚·‚éŒ…‚ðÝ’è‚µ‚Ü‚·
+		MaxInfl = mc.intField( 'roundWeightFields', q=True, value=True )
+		#å››æ¨äº”å…¥ã™ã‚‹æ¡ã‚’è¨­å®šã—ã¾ã™
 		global roundPoint
 		roundPoint = mc.intField( 'maxInflFields', q=True, value=True )
-				
-		##Œã‚Å‚Ü‚Æ‚ß‚Ä³‹K‰»‚·‚é‚Ì‚ÅAƒŠƒXƒg‚É“ü‚ê‚Æ‚«‚Ü‚·
+
+		##å¾Œã§ã¾ã¨ã‚ã¦æ­£è¦åŒ–ã™ã‚‹ã®ã§ã€ãƒªã‚¹ãƒˆã«å…¥ã‚Œã¨ãã¾ã™
 		global skinClusterList
-		
-		#ƒGƒ‰[‚ð‹N‚±‚µ‚Ä‚¢‚é’¸“_‚ðƒŠƒXƒg‚µ‚Ü‚·
+
+		#ã‚¨ãƒ©ãƒ¼ã‚’èµ·ã“ã—ã¦ã„ã‚‹é ‚ç‚¹ã‚’ãƒªã‚¹ãƒˆã—ã¾ã™
 		global errorVertex
-		
-		
-		#‘I‘ð‚µ‚½’¸“_‚ðƒtƒ‰ƒbƒg‚ÅŽæ“¾‚µ‚Ü‚·B
+
+
+		#é¸æŠžã—ãŸé ‚ç‚¹ã‚’ãƒ•ãƒ©ãƒƒãƒˆã§å–å¾—ã—ã¾ã™ã€‚
 		selectVert = mc.ls(sl=True,fl=True)
 
-		#ƒvƒƒOƒŒƒXƒEƒBƒ“ƒhƒEˆ—
+		#ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å‡¦ç†
 		numberVtx = len(selectVert)
 		amount = 0
 		mc.progressWindow( title='please weight...', progress=amount, status='now check: 0%', isInterruptable=True )
-		#ƒvƒƒOƒŒƒXƒEƒBƒ“ƒhƒEˆ—
-				
+		#ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å‡¦ç†
+
 		for vtx in selectVert:
-			#Žæ“¾‚µ‚½’¸“_‚ðŽx”z‚µ‚Ä‚¢‚éƒXƒLƒ“ƒNƒ‰ƒXƒ^[‚ðŽæ“¾‚µ‚Ü‚·B
+			#å–å¾—ã—ãŸé ‚ç‚¹ã‚’æ”¯é…ã—ã¦ã„ã‚‹ã‚¹ã‚­ãƒ³ã‚¯ãƒ©ã‚¹ã‚¿ãƒ¼ã‚’å–å¾—ã—ã¾ã™ã€‚
 			objSkinName = vtx.split('.')
 			connectSkinsName = mm.eval('findRelatedSkinCluster %s' % objSkinName[0])
-			
-			#Œã‚Å‚Ü‚Æ‚ß‚Ä³‹K‰»‚·‚é‚Ì‚ÅAƒŠƒXƒg‚É“ü‚ê‚Æ‚«‚Ü‚·
+
+			#å¾Œã§ã¾ã¨ã‚ã¦æ­£è¦åŒ–ã™ã‚‹ã®ã§ã€ãƒªã‚¹ãƒˆã«å…¥ã‚Œã¨ãã¾ã™
 			skinClusterList.append(connectSkinsName)
-			
-			#ƒXƒLƒ“ƒNƒ‰ƒXƒ^‚ÌƒEƒFƒCƒg’l³‹K‰»‰ðœ
+
+			#ã‚¹ã‚­ãƒ³ã‚¯ãƒ©ã‚¹ã‚¿ã®ã‚¦ã‚§ã‚¤ãƒˆå€¤æ­£è¦åŒ–è§£é™¤
 			mc.setAttr (connectSkinsName +".normalizeWeights", 0)
-			
-			#‘I‘ð‚µ‚½’¸“_‚ÌƒCƒ“ƒtƒ‹ƒGƒ“ƒVƒƒƒ‹‚ÈŠeƒWƒ‡ƒCƒ“ƒg‚ðƒŠƒXƒg‚µ‚Ü‚·
+
+			#é¸æŠžã—ãŸé ‚ç‚¹ã®ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚·ãƒ£ãƒ«ãªå„ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ãƒªã‚¹ãƒˆã—ã¾ã™
 			listWeightJoint = mc.skinPercent( connectSkinsName, vtx, q=True , t=None )
-			#ƒŠƒXƒg‚µ‚½ƒWƒ‡ƒCƒ“ƒg‚ªŽx”z‚µ‚Ä‚¢‚éƒp[ƒZƒ“ƒe[ƒW‚ðŽæ“¾‚µ‚Ü‚·
+			#ãƒªã‚¹ãƒˆã—ãŸã‚¸ãƒ§ã‚¤ãƒ³ãƒˆãŒæ”¯é…ã—ã¦ã„ã‚‹ãƒ‘ãƒ¼ã‚»ãƒ³ãƒ†ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¾ã™
 			listWeightValue = mc.skinPercent( connectSkinsName, vtx, q=True , v=True )
-			
-			
-			#ƒEƒFƒCƒg‚ð‚à‚Á‚Ä‚¢‚éƒWƒ‡ƒCƒ“ƒg‚ðƒsƒbƒNƒAƒbƒv‚µAƒ‰ƒEƒ“ƒh‚µ‚ÄŠi”[‚µ‚Ü‚·
+
+
+			#ã‚¦ã‚§ã‚¤ãƒˆã‚’ã‚‚ã£ã¦ã„ã‚‹ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã€ãƒ©ã‚¦ãƒ³ãƒ‰ã—ã¦æ ¼ç´ã—ã¾ã™
 			haveWeightDic = {}
 			for i,v in enumerate(listWeightJoint):
-				if listWeightValue[i] > 0:		
+				if listWeightValue[i] > 0:
 					roundNum = 	round(listWeightValue[i], roundPoint)
 					haveWeightDic[v] = roundNum
-			
-				
-			#ƒ‰ƒEƒ“ƒh‚µ‚½ƒEƒFƒCƒg‚ð‚·‚×‚Ä‘«‚·‚ÆA1ˆÈŠO‚É‚È‚éê‡
+
+
+			#ãƒ©ã‚¦ãƒ³ãƒ‰ã—ãŸã‚¦ã‚§ã‚¤ãƒˆã‚’ã™ã¹ã¦è¶³ã™ã¨ã€1ä»¥å¤–ã«ãªã‚‹å ´åˆ
 			weightPointList = haveWeightDic.values()
 			totalPoint = sum(weightPointList)
 			if totalPoint != 1:
-				print weightPointList
-				#ƒŠƒXƒg“à‚Ìˆê”Ô‘å‚«‚È’l‚ÆA‚»‚ê‚ðŠi”[‚µ‚Ä‚¢‚éƒŠƒXƒg”Ô†‚ðŽæ“¾‚µ‚Ü‚·
+				print (weightPointList)
+				#ãƒªã‚¹ãƒˆå†…ã®ä¸€ç•ªå¤§ããªå€¤ã¨ã€ãã‚Œã‚’æ ¼ç´ã—ã¦ã„ã‚‹ãƒªã‚¹ãƒˆç•ªå·ã‚’å–å¾—ã—ã¾ã™
 				mx = max(weightPointList)
 				mxIndex = weightPointList.index(mx)
-					
-				#1‚©‚çA‡Œv”‚ðˆø‚¢‚ÄA·•ª‚ðˆê”Ô‘å‚«‚È’l‚ðŽ‚ÂƒWƒ‡ƒCƒ“ƒg‚É‘«‚µ‚±‚ñ‚ÅA‚»‚ê‚ðƒEƒFƒCƒgƒŠƒXƒg‚ÉÄŠi”[‚µ‚Ü‚·
+
+				#1ã‹ã‚‰ã€åˆè¨ˆæ•°ã‚’å¼•ã„ã¦ã€å·®åˆ†ã‚’ä¸€ç•ªå¤§ããªå€¤ã‚’æŒã¤ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã«è¶³ã—ã“ã‚“ã§ã€ãã‚Œã‚’ã‚¦ã‚§ã‚¤ãƒˆãƒªã‚¹ãƒˆã«å†æ ¼ç´ã—ã¾ã™
 				diff = 1 - totalPoint
 				weightPointList[mxIndex] = mx + diff
-			
+
 				weightedJoints = haveWeightDic.keys()
 				for i,v in enumerate(weightedJoints):
 					haveWeightDic[v] = weightPointList[i]
-			
-			
-			#ƒEƒFƒCƒg‚ÌƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ª‹K’è’l‚ð’´‚¦‚Ä‚¢‚éê‡‚ÍƒGƒ‰[‚ð•\Ž¦‚µ‚Ü‚·
+
+
+			#ã‚¦ã‚§ã‚¤ãƒˆã®ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ãŒè¦å®šå€¤ã‚’è¶…ãˆã¦ã„ã‚‹å ´åˆã¯ã‚¨ãƒ©ãƒ¼ã‚’è¡¨ç¤ºã—ã¾ã™
 			if len(haveWeightDic) > MaxInfl:
 				errorVertex.append(vtx)
-				print vtx + u'<---‚±‚Ì’¸“_‚Íƒ}ƒbƒNƒXƒCƒtƒ‹ƒGƒ“ƒX‚ª‹K’è’l‚ð’´‚¦‚Ä‚¢‚Ü‚·'
-			
-			
-			#Œ‹‰Ê‚ðƒEƒFƒCƒg’l‚É–ß‚µ‚Ü‚·
+				print (vtx + u'<---ã“ã®é ‚ç‚¹ã¯ãƒžãƒƒã‚¯ã‚¹ã‚¤ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ãŒè¦å®šå€¤ã‚’è¶…ãˆã¦ã„ã¾ã™')
+
+
+			#çµæžœã‚’ã‚¦ã‚§ã‚¤ãƒˆå€¤ã«æˆ»ã—ã¾ã™
 			weightedJoints = haveWeightDic.keys()
 			for v in weightedJoints:
 				mc.skinPercent( connectSkinsName, vtx, tv=(v, haveWeightDic[v]), normalize=False )
-		
 
-			#ƒvƒƒOƒŒƒXƒEƒBƒ“ƒhƒEˆ—
+
+			#ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å‡¦ç†
 			if mc.progressWindow( q=True, isCancelled=True ):
 				break
-			
+
 			adoptNum = str(amount/numberVtx)
 			mc.progressWindow( e=True, progress=(int((amount*1.0)/numberVtx*100)), status=('now check:' + adoptNum + '%') )
 			amount = amount +1
-			
-		mc.progressWindow( endProgress=True )		
-		#ƒvƒƒOƒŒƒXƒEƒBƒ“ƒhƒEˆ—
-				
-		#ƒXƒLƒ“ƒNƒ‰ƒXƒ^‚ÌƒEƒFƒCƒg’l³‹K‰»ÄÝ’è
+
+		mc.progressWindow( endProgress=True )
+		#ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å‡¦ç†
+
+		#ã‚¹ã‚­ãƒ³ã‚¯ãƒ©ã‚¹ã‚¿ã®ã‚¦ã‚§ã‚¤ãƒˆå€¤æ­£è¦åŒ–å†è¨­å®š
 		for skinCls in skinClusterList:
 			mc.setAttr (skinCls +".normalizeWeights", 1)
-		
+
 		skinClusterList = []
 	#---------------------------------------------------------------------------------------------------------------------
-	
-	#---------------------------------------------------------------------------------------------------------------------	
+
+	#---------------------------------------------------------------------------------------------------------------------
 	def maxInfllenceAdjustment(self, *args):
-	
-		#ƒ}ƒbƒNƒXƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ðŽw’è‚µ‚Ü‚·
+
+		#ãƒžãƒƒã‚¯ã‚¹ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ã‚’æŒ‡å®šã—ã¾ã™
 		global MaxInfl
-		MaxInfl = mc.intField( 'roundWeightFields', q=True, value=True )		
-		#ŽlŽÌŒÜ“ü‚·‚éŒ…‚ðÝ’è‚µ‚Ü‚·
+		MaxInfl = mc.intField( 'roundWeightFields', q=True, value=True )
+		#å››æ¨äº”å…¥ã™ã‚‹æ¡ã‚’è¨­å®šã—ã¾ã™
 		global roundPoint
 		roundPoint = mc.intField( 'maxInflFields', q=True, value=True )
-				
-		##Œã‚Å‚Ü‚Æ‚ß‚Ä³‹K‰»‚·‚é‚Ì‚ÅAƒŠƒXƒg‚É“ü‚ê‚Æ‚«‚Ü‚·
+
+		##å¾Œã§ã¾ã¨ã‚ã¦æ­£è¦åŒ–ã™ã‚‹ã®ã§ã€ãƒªã‚¹ãƒˆã«å…¥ã‚Œã¨ãã¾ã™
 		global skinClusterList
-		
-		#ƒGƒ‰[‚ð‹N‚±‚µ‚Ä‚¢‚é’¸“_‚ðƒŠƒXƒg‚µ‚Ü‚·
+
+		#ã‚¨ãƒ©ãƒ¼ã‚’èµ·ã“ã—ã¦ã„ã‚‹é ‚ç‚¹ã‚’ãƒªã‚¹ãƒˆã—ã¾ã™
 		global errorVertex
-	
-		#maxInflence‚ð’´‚¦‚ÄƒEƒFƒCƒg‚ðŽ‚Á‚Ä‚¢‚é’¸“_‚ð’²®‚µ‚Ü‚·
+
+		#maxInflenceã‚’è¶…ãˆã¦ã‚¦ã‚§ã‚¤ãƒˆã‚’æŒã£ã¦ã„ã‚‹é ‚ç‚¹ã‚’èª¿æ•´ã—ã¾ã™
 		selectVert = mc.ls(errorVertex,fl=True)
-		
-		#ƒvƒƒOƒŒƒXƒEƒBƒ“ƒhƒEˆ—
+
+		#ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å‡¦ç†
 		numberVtx = len(selectVert)
 		amount = 0
 		mc.progressWindow( title='please weight...', progress=amount, status='now check: 0%', isInterruptable=True )
-		#ƒvƒƒOƒŒƒXƒEƒBƒ“ƒhƒEˆ—
-		
+		#ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å‡¦ç†
+
 		for vtx in selectVert:
-			#Žæ“¾‚µ‚½’¸“_‚ðŽx”z‚µ‚Ä‚¢‚éƒXƒLƒ“ƒNƒ‰ƒXƒ^[‚ðŽæ“¾‚µ‚Ü‚·B
+			#å–å¾—ã—ãŸé ‚ç‚¹ã‚’æ”¯é…ã—ã¦ã„ã‚‹ã‚¹ã‚­ãƒ³ã‚¯ãƒ©ã‚¹ã‚¿ãƒ¼ã‚’å–å¾—ã—ã¾ã™ã€‚
 			objSkinName = vtx.split('.')
 			connectSkinsName = mm.eval('findRelatedSkinCluster %s' % objSkinName[0])
-			
-			#Œã‚Å‚Ü‚Æ‚ß‚Ä³‹K‰»‚·‚é‚Ì‚ÅAƒŠƒXƒg‚É“ü‚ê‚Æ‚«‚Ü‚·
+
+			#å¾Œã§ã¾ã¨ã‚ã¦æ­£è¦åŒ–ã™ã‚‹ã®ã§ã€ãƒªã‚¹ãƒˆã«å…¥ã‚Œã¨ãã¾ã™
 			skinClusterList.append(connectSkinsName)
-			
-			#ƒXƒLƒ“ƒNƒ‰ƒXƒ^‚ÌƒEƒFƒCƒg’l³‹K‰»‰ðœ
+
+			#ã‚¹ã‚­ãƒ³ã‚¯ãƒ©ã‚¹ã‚¿ã®ã‚¦ã‚§ã‚¤ãƒˆå€¤æ­£è¦åŒ–è§£é™¤
 			mc.setAttr (connectSkinsName +".normalizeWeights", 0)
-			
-			#ƒEƒFƒCƒg‚ð‚à‚Á‚Ä‚¢‚éƒWƒ‡ƒCƒ“ƒg‚ðƒsƒbƒNƒAƒbƒv‚µAƒ‰ƒEƒ“ƒh‚µ‚ÄŠi”[‚µ‚Ü‚·
-			haveWeightDic = self.weightBalanceList(vtx,connectSkinsName)			
-			
-			
-			#maxInfllence‚©‚ç‚Ç‚Ì‚­‚ç‚¢ƒI[ƒo[‚µ‚Ä‚¢‚é‚©‚ðƒJƒEƒ“ƒg‚µ‚Ü‚·
+
+			#ã‚¦ã‚§ã‚¤ãƒˆã‚’ã‚‚ã£ã¦ã„ã‚‹ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã€ãƒ©ã‚¦ãƒ³ãƒ‰ã—ã¦æ ¼ç´ã—ã¾ã™
+			haveWeightDic = self.weightBalanceList(vtx,connectSkinsName)
+
+
+			#maxInfllenceã‹ã‚‰ã©ã®ãã‚‰ã„ã‚ªãƒ¼ãƒãƒ¼ã—ã¦ã„ã‚‹ã‹ã‚’ã‚«ã‚¦ãƒ³ãƒˆã—ã¾ã™
 			subPoint = len( haveWeightDic ) - MaxInfl
-			
+
 			getMiniPoint = 0.0
-			
-			#maxInfllence‚ð’´‚¦‚ÄƒEƒFƒCƒg‚ª‚È‚³‚ê‚Ä‚¢‚½ê‡AŽ©“®’²®
+
+			#maxInfllenceã‚’è¶…ãˆã¦ã‚¦ã‚§ã‚¤ãƒˆãŒãªã•ã‚Œã¦ã„ãŸå ´åˆã€è‡ªå‹•èª¿æ•´
 			if subPoint > 0:
-				#ƒEƒFƒCƒg‚Ì¬‚³‚¢‡‚©‚çƒ\[ƒg‚ð‚©‚¯‚½ƒŠƒXƒg‚ðì¬‚µ‚Ü‚·
+				#ã‚¦ã‚§ã‚¤ãƒˆã®å°ã•ã„é †ã‹ã‚‰ã‚½ãƒ¼ãƒˆã‚’ã‹ã‘ãŸãƒªã‚¹ãƒˆã‚’ä½œæˆã—ã¾ã™
 				sortWeightlist = haveWeightDic.items()
 				sortWeightlist.sort(key=lambda a: a[1])
-				
-				#ƒWƒ‡ƒCƒ“ƒg‚ÆƒEƒFƒCƒg‚ÌƒŠƒXƒg‚ðì¬‚µ‚Ü‚·
+
+				#ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã¨ã‚¦ã‚§ã‚¤ãƒˆã®ãƒªã‚¹ãƒˆã‚’ä½œæˆã—ã¾ã™
 				jointSortList = []
 				pointSortList = []
 				for i in sortWeightlist:
 					jointSortList.append(i[0])
 					pointSortList.append(i[1])
-				
-				#¬‚³‚¢ƒEƒFƒCƒg‚ðƒI[ƒo[‚µ‚Ä‚¢‚é”•ª‘«‚µ‚Ü‚·
-				#ƒI[ƒo[‚µ‚Ä‚¢‚éƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ð’²®‚·‚é‚½‚ß‚ÉA¬‚³‚¢ƒEƒFƒCƒg‚©‚ç‡”Ô‚ÉƒEƒFƒCƒg‚ð0‚É‚µ‚Ä‚¢‚«‚Ü‚·
+
+				#å°ã•ã„ã‚¦ã‚§ã‚¤ãƒˆã‚’ã‚ªãƒ¼ãƒãƒ¼ã—ã¦ã„ã‚‹æ•°åˆ†è¶³ã—ã¾ã™
+				#ã‚ªãƒ¼ãƒãƒ¼ã—ã¦ã„ã‚‹ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ã‚’èª¿æ•´ã™ã‚‹ãŸã‚ã«ã€å°ã•ã„ã‚¦ã‚§ã‚¤ãƒˆã‹ã‚‰é †ç•ªã«ã‚¦ã‚§ã‚¤ãƒˆã‚’0ã«ã—ã¦ã„ãã¾ã™
 				for i in range(0,subPoint):
 					getMiniPoint = getMiniPoint + pointSortList[i]
 					pointSortList[i] = 0
-				
-				#•½‹Ï‚ðŒvŽZ‚µ‚ÄAfor•¶‚ÅƒŠƒXƒg‚ð‘«‚µŽZ
+
+				#å¹³å‡ã‚’è¨ˆç®—ã—ã¦ã€foræ–‡ã§ãƒªã‚¹ãƒˆã‚’è¶³ã—ç®—
 				avg = round( getMiniPoint / MaxInfl, roundPoint)
 				n = -1
-				
+
 				for i in range(0,subPoint):
-					pointSortList[n] = round( pointSortList[n] + avg, roundPoint) 
+					pointSortList[n] = round( pointSortList[n] + avg, roundPoint)
 					n = n -1
-				
-				
-				#‡Œv”‚ªˆêˆÈŠO‚Ìê‡‚Ìˆ—
+
+
+				#åˆè¨ˆæ•°ãŒä¸€ä»¥å¤–ã®å ´åˆã®å‡¦ç†
 				total = sum(pointSortList)
 				if total != 1:
-					sub =  round( 1 - total, roundPoint) 
+					sub =  round( 1 - total, roundPoint)
 					pointSortList[n] = pointSortList[n] + sub
-					
-			
-				#Œ‹‰Ê‚ðƒEƒFƒCƒg’l‚É–ß‚µ‚Ü‚·
+
+
+				#çµæžœã‚’ã‚¦ã‚§ã‚¤ãƒˆå€¤ã«æˆ»ã—ã¾ã™
 				for i,v in enumerate(jointSortList):
 					mc.skinPercent( connectSkinsName, vtx, tv=(v, pointSortList[i]), normalize=False )
-			
-			#ƒvƒƒOƒŒƒXƒEƒBƒ“ƒhƒEˆ—
+
+			#ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å‡¦ç†
 			if mc.progressWindow( q=True, isCancelled=True ):
 				break
-			
+
 			adoptNum = str(amount/numberVtx)
 			mc.progressWindow( e=True, progress=(int((amount*1.0)/numberVtx*100)), status=('now check:' + adoptNum + '%') )
 			amount = amount +1
-			
-		mc.progressWindow( endProgress=True )		
-		#ƒvƒƒOƒŒƒXƒEƒBƒ“ƒhƒEˆ—
-		
-		#ƒXƒLƒ“ƒNƒ‰ƒXƒ^‚ÌƒEƒFƒCƒg’l³‹K‰»ÄÝ’è
+
+		mc.progressWindow( endProgress=True )
+		#ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å‡¦ç†
+
+		#ã‚¹ã‚­ãƒ³ã‚¯ãƒ©ã‚¹ã‚¿ã®ã‚¦ã‚§ã‚¤ãƒˆå€¤æ­£è¦åŒ–å†è¨­å®š
 		for skinCls in skinClusterList:
 			mc.setAttr (skinCls +".normalizeWeights", 1)
-		
+
 	#---------------------------------------------------------------------------------------------------------------------
-		
-	
-	
-	#---------------------------------------------------------------------------------------------------------------------	
+
+
+
+	#---------------------------------------------------------------------------------------------------------------------
 	def thresholdDetermination(self, *args):
-		#‘I‘ð‚µ‚½’¸“_‚ðƒtƒ‰ƒbƒg‚ÅŽæ“¾‚µ‚Ü‚·B
+		#é¸æŠžã—ãŸé ‚ç‚¹ã‚’ãƒ•ãƒ©ãƒƒãƒˆã§å–å¾—ã—ã¾ã™ã€‚
 		selectVert = mc.ls(sl=True,fl=True)
-		
-		#ƒGƒ‰[‚ð‹N‚±‚µ‚Ä‚¢‚é’¸“_‚ðŠi”[‚µ‚Ü‚·
-		
+
+		#ã‚¨ãƒ©ãƒ¼ã‚’èµ·ã“ã—ã¦ã„ã‚‹é ‚ç‚¹ã‚’æ ¼ç´ã—ã¾ã™
+
 		errorVertex = []
-		
+
 		numberVtx = len(selectVert)
 		amount = 0
 		mc.progressWindow( title='please weight...', progress=amount, status='now check: 0%', isInterruptable=True )
-		
+
 		for vtx in selectVert:
-			#Žæ“¾‚µ‚½’¸“_‚ðŽx”z‚µ‚Ä‚¢‚éƒXƒLƒ“ƒNƒ‰ƒXƒ^[‚ðŽæ“¾‚µ‚Ü‚·B
+			#å–å¾—ã—ãŸé ‚ç‚¹ã‚’æ”¯é…ã—ã¦ã„ã‚‹ã‚¹ã‚­ãƒ³ã‚¯ãƒ©ã‚¹ã‚¿ãƒ¼ã‚’å–å¾—ã—ã¾ã™ã€‚
 			objSkinName = vtx.split('.')
 			connectSkinsName = mm.eval('findRelatedSkinCluster %s' % objSkinName[0])
-						
-			#ƒEƒFƒCƒg‚ð‚à‚Á‚Ä‚¢‚éƒWƒ‡ƒCƒ“ƒg‚ðƒsƒbƒNƒAƒbƒv‚µAƒ‰ƒEƒ“ƒh‚µ‚ÄŠi”[‚µ‚Ü‚·
+
+			#ã‚¦ã‚§ã‚¤ãƒˆã‚’ã‚‚ã£ã¦ã„ã‚‹ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã€ãƒ©ã‚¦ãƒ³ãƒ‰ã—ã¦æ ¼ç´ã—ã¾ã™
 			haveWeightDic = self.weightBalanceList(vtx,connectSkinsName)
-			
-			#ƒEƒFƒCƒg‚ÌƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ª‹K’è’l‚ð’´‚¦‚Ä‚¢‚éê‡‚ÍƒGƒ‰[‚ð•\Ž¦‚µ‚Ü‚·
+
+			#ã‚¦ã‚§ã‚¤ãƒˆã®ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ãŒè¦å®šå€¤ã‚’è¶…ãˆã¦ã„ã‚‹å ´åˆã¯ã‚¨ãƒ©ãƒ¼ã‚’è¡¨ç¤ºã—ã¾ã™
 			if len(haveWeightDic) > MaxInfl:
 				errorVertex.append(vtx)
-				print vtx + u'<---‚±‚Ì’¸“_‚Íƒ}ƒbƒNƒXƒCƒtƒ‹ƒGƒ“ƒX‚ª‹K’è’l‚ð’´‚¦‚Ä‚¢‚Ü‚·'		
-			
-			
+				print (vtx + u'<---ã“ã®é ‚ç‚¹ã¯ãƒžãƒƒã‚¯ã‚¹ã‚¤ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ãŒè¦å®šå€¤ã‚’è¶…ãˆã¦ã„ã¾ã™'	)
+
+
 			if mc.progressWindow( q=True, isCancelled=True ):
 				break
-			
+
 			adoptNum = str(amount/numberVtx)
 			mc.progressWindow( e=True, progress=(int((amount*1.0)/numberVtx*100)), status=('now check:' + adoptNum + '%') )
 			amount = amount +1
-			
-		mc.progressWindow( endProgress=True )	
-		
+
+		mc.progressWindow( endProgress=True )
+
 		if errorVertex != []:
 			mc.select(errorVertex,r=True)
-			mc.confirmDialog(m='¡‘I‘ð‚µ‚Ä‚¢‚é’¸“_‚Íƒ}ƒbƒNƒXƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ðƒI[ƒo[‚µ‚Ä‚¢‚Ü‚·')
+			mc.confirmDialog(m='ä»Šé¸æŠžã—ã¦ã„ã‚‹é ‚ç‚¹ã¯ãƒžãƒƒã‚¯ã‚¹ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ã‚’ã‚ªãƒ¼ãƒãƒ¼ã—ã¦ã„ã¾ã™')
 		else:
 			mc.select(clear=True)
-			mc.confirmDialog(m='ƒ}ƒbƒNƒXƒCƒ“ƒtƒ‹ƒGƒ“ƒX‚ð‰z‚¦‚Ä‚¢‚é’¸“_‚Í‘¶Ý‚µ‚Ü‚¹‚ñ')
+			mc.confirmDialog(m='ãƒžãƒƒã‚¯ã‚¹ã‚¤ãƒ³ãƒ•ãƒ«ã‚¨ãƒ³ã‚¹ã‚’è¶Šãˆã¦ã„ã‚‹é ‚ç‚¹ã¯å­˜åœ¨ã—ã¾ã›ã‚“')
 
 
 weightRebalance().createUI()
